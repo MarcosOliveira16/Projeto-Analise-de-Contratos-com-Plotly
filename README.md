@@ -7,7 +7,7 @@ Você foi contratado por uma empresa com mais de 800 mil clientes para um projet
 Precisando melhorar seus resultados, a empresa quer entender os principais motivos desses cancelamentos e quais as ações mais eficientes para reduzir esse número.
 
 ### Base de Dados
-Os arquivos utilizados podem ser encontrados no link: [Base de Dados](https://drive.google.com/drive/folders/1uDesZePdkhiraJmiyeZ-w5tfc8XsNYFZ?usp=drive_link)
+O arquivo usado e que deve ser importado para o ambiente é o 'cancelamentos.csv', encontrado neste repositório.
 
 ## Passo a Passo
 
