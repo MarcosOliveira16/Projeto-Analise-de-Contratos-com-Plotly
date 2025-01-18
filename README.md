@@ -1,130 +1,115 @@
-# Projeto: Análise de Contratos com Plotly
+# Python Insights - Analisando Dados com Python
 
-Este projeto utiliza Python e bibliotecas como `pandas`, `numpy` e `plotly` para análise e visualização de dados relacionados à duração e status de contratos.
+### Case - Cancelamento de Clientes
 
----
+Você foi contratado por uma empresa com mais de 800 mil clientes para um projeto de Dados. Recentemente a empresa percebeu que da sua base total de clientes, a maioria são clientes inativos, ou seja, que já cancelaram o serviço.
 
-## Estrutura do Projeto
+Precisando melhorar seus resultados, a empresa quer entender os principais motivos desses cancelamentos e quais as ações mais eficientes para reduzir esse número.
 
-O notebook contém as seguintes seções principais:
+### Base de Dados
+Os arquivos utilizados podem ser encontrados no link: [Base de Dados](https://drive.google.com/drive/folders/1uDesZePdkhiraJmiyeZ-w5tfc8XsNYFZ?usp=drive_link)
 
-- # Python Insights - Analisando Dados com Python
-- ### Case - Cancelamento de Clientes
-- # Passo a Passo
-- ```python
-# Passo 1: importar a base de dados
-# Passo 2: visualizar a base de dados (entender a base + identif...
-```
-- # Passo 1: Importar a base de dados
-- ```python
-# passo 1: importar a base dados
+## Passo a Passo
 
-# instalar as bibliotecas necessárias via cedula
-# !pip install pa...
-```
-- # Passo 2: Visualizar a base de dados (entender a base + identificar problemas)
-- ```python
-# Primeiro: corrigir valores vazios
+### Passo 1: Importar a Base de Dados
 
-# vendo infos da tabela
-# comparar a tabela com o numero maior ...
-```
-- # Passo 3: Corrigir os problemas da base de dados (tratamento de dados)
-- ```python
-# como o número de resgistro com dados faltantes é muito pequeno, podemos excluir estas linhas
-# out...
-```
-- # Passo 4: Análise Inicial -> quantos clientes cancelaram e qual o % de clientes
-- ```python
-# contar os valores na coluna 'cancelou'
-
-display(tabela["cancelou"].value_counts())
-# resultado do ...
-```
-- # Passo 5: Análise de causa de cancelamento dos clientes (comparar as outras colunas da tabela com a coluna de cancelamento)
-- ```python
-import plotly.express as px
-
-# gráficos
-
-# 1. criar o gráfico
-# (base de dados, eixo x)
-grafico = px...
-```
-- ```python
-# automatizando o processo de análise - ver tds os gráficos de uma vez
-
-import plotly.express as px
-...
-```
-- ```python
-# usuarios do contrato mensal sempre cancelam
-    # evitar o contrato mensal e incentivar (com desco...
-```
-- ```python
-# usuarios do contrato mensal sempre cancelam
-    # evitar o contrato mensal e incentivar (com desco...
-```
-- ```python
-# usuarios do contrato mensal sempre cancelam
-    # evitar o contrato mensal e incentivar (com desco...
-```
-- ```python
-# usuarios do contrato mensal sempre cancelam
-    # evitar o contrato mensal e incentivar (com desco...
-```
-
-
----
-
-## Instruções para Execução
-
-1. Certifique-se de ter o Python instalado (recomenda-se a versão 3.10 ou superior).
-2. Instale as dependências necessárias com o seguinte comando:
-
+Primeiramente, instalamos as bibliotecas necessárias:
 ```bash
-pip install -r requirements.txt
+# Via célula do Jupyter Notebook
+!pip install pandas numpy openpyxl plotly
+
+# Via terminal
+pip install pandas numpy openpyxl plotly
 ```
 
-3. Abra o arquivo Jupyter Notebook (`app.ipynb`) com o Jupyter ou VS Code.
+Em seguida, carregamos a base de dados:
+```python
+import pandas as pd
 
----
+tabela = pd.read_csv("cancelamentos.csv")
 
-## Funcionalidades Principais
+# Removendo a coluna irrelevante "CustomerID"
+tabela = tabela.drop(columns="CustomerID")
 
-- **Visualização de Dados**: Utiliza o Plotly para criar gráficos interativos, incluindo histogramas.
-- **Análise de Contratos**: Exibe o status dos contratos com cores distintas (azul para cancelado, laranja para não cancelado).
-- **Facilidade de Integração**: Possibilidade de personalização com dados externos.
+# Exibindo a tabela
+display(tabela)
+```
 
----
+### Passo 2: Visualizar a Base de Dados
 
-## Exemplo de Uso
+Antes de qualquer análise, verificamos as informações da tabela:
+```python
+# Verificando informações gerais
+print(tabela.info())
+```
+Isso nos permite identificar possíveis valores faltantes ou inconsistências nos dados.
 
+### Passo 3: Tratamento de Dados
+
+Removemos valores ausentes, já que eles representam uma pequena parte da base:
+```python
+# Removendo linhas com valores ausentes
+tabela = tabela.dropna()
+
+# Confirmando o novo tamanho da tabela
+print(tabela.info())
+```
+
+### Passo 4: Análise Inicial
+
+Contamos os valores na coluna `cancelou` para identificar a quantidade e o percentual de clientes que cancelaram:
+```python
+# Contagem dos valores
+display(tabela["cancelou"].value_counts())
+
+# Percentuais
+display(tabela["cancelou"].value_counts(normalize=True))
+```
+
+Resultados:
+- 56% dos clientes cancelaram
+- 43% dos clientes não cancelaram
+
+### Passo 5: Análise de Causa de Cancelamento
+
+Utilizamos gráficos para analisar como diferentes variáveis influenciam o cancelamento:
 ```python
 import plotly.express as px
 
-grafico = px.histogram(
-    tabela,
-    x="duracao_contrato",
-    color="cancelou",
-    text_auto=True,
-    color_discrete_map={
-        "1.0": "blue",
-        "0.0": "orange"
-    }
-)
-grafico.show()
+# Criando gráficos para cada coluna
+for coluna in tabela.columns:
+    grafico = px.histogram(tabela, x=coluna, color="cancelou", text_auto=True)
+    grafico.show()
 ```
 
----
+#### Observações:
+1. Usuários de contrato mensal têm maior propensão a cancelar.
+2. Usuários que ligaram mais de 4 vezes para o call center geralmente cancelaram.
+3. Usuários com atraso de pagamento superior a 20 dias também tendem a cancelar.
 
-## Autor
+### Passo 6: Propostas de Soluções
 
-- **Marcos Rafael Araújo Oliveira**
+Com base na análise, aplicamos filtros para mitigar os principais problemas:
+```python
+# Removendo contratos mensais
+tabela = tabela[tabela['duracao_contrato'] != "Monthly"]
 
----
+# Mantendo usuários com até 4 ligações para o call center
+tabela = tabela[tabela['ligacoes_callcenter'] <= 4]
 
-## Licença
+# Mantendo usuários com atraso de pagamento de até 20 dias
+tabela = tabela[tabela['dias_atraso'] <= 20]
 
-Este projeto é distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para mais informações.
+# Resultados finais
+display(tabela["cancelou"].value_counts())
+display(tabela["cancelou"].value_counts(normalize=True))
+```
+
+### Conclusões
+
+- Contratos anuais e trimestrais devem ser incentivados com descontos.
+- Monitorar clientes com mais de 3 chamadas para o call center para ações preventivas.
+- Criar alertas para atrasos superiores a 15 dias.
+
+Essa análise demonstra que a combinação de ajustes contratuais, atendimento proativo e políticas de cobrança pode reduzir significativamente o número de cancelamentos.
 
